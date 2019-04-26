@@ -13,6 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.NonNull;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -344,14 +345,14 @@ public class APIManagerAdapter {
 	 * @return the id of the organization
 	 * @throws AppException 
 	 */
-	public String getOrgId(String orgName) throws AppException {
+	public String getOrgId(@NonNull String orgName) throws AppException {
 		if(!this.hasAdminAccount) return null;
 		if(allOrgs == null) getAllOrgs();
 		for(Organization org : allOrgs) {
 			if(orgName.equals(org.getName())) return org.getId();
 		}
 		LOG.error("Requested OrgId for unknown orgName: " + orgName);
-		return null;
+		throw new AppException("Requested OrgId for unknown orgName: " + orgName,ErrorCode.UNKNOWN_ORGANIZATION);
 	}
 	
 	/**
@@ -360,13 +361,13 @@ public class APIManagerAdapter {
 	 * @return the id of the organization
 	 * @throws AppException 
 	 */
-	public String getOrgName(String orgId) throws AppException {
+	public String getOrgName(@NonNull String orgId) throws AppException {
 		if(allOrgs == null) getAllOrgs();
 		for(Organization org : allOrgs) {
 			if(orgId.equals(org.getId())) return org.getName();
 		}
 		LOG.error("Requested OrgName for unknown orgId: " + orgId);
-		return null;
+		throw new AppException("Requested OrgName for unknown orgId: " + orgId,ErrorCode.UNKNOWN_ORGANIZATION);
 	}
 	
 	/**
